@@ -1,23 +1,12 @@
-FROM summerwind/actions-runner:latest
+FROM python:3.11-slim
+ENV PORT 8000
+EXPOSE 8000
+WORKDIR /usr/src/app
 
-RUN sudo apt update -y \
-  && umask 0002 \
-  && sudo apt install -y ca-certificates curl apt-transport-https lsb-release gnupg
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install MS Key
-RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+COPY . .
 
-# Add MS Apt repo
-RUN umask 0002 && echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ focal main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-
-# Install Azure CLI
-RUN sudo apt update -y \
-  && umask 0002 \
-  && sudo apt install -y azure-cli 
-
-RUN sudo rm -rf /var/lib/apt/lists/*
-
-# Download and install kubectl 
-RUN sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-RUN sudo  chmod +x ./kubectl
-RUN sudo mv ./kubectl /usr/local/bin/kubectl
+ENTRYPOINT ["python"]
+CMD ["app.py"]
