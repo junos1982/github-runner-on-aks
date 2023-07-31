@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poc-arc
+  labels:
+    app: poc-arc
+  namespace: namespace-workflow-1690774686621
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: poc-arc
+  template:
+    metadata:
+      labels:
+        app: poc-arc
+    spec:
+      containers:
+        - name: poc-arc
+          image: acrworkflow1690774686621.azurecr.io/image-workflow-1690774686621:latest
+          ports:
+            - containerPort: 8000
