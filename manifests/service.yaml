@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: poc-arc
+  namespace: namespace-workflow-1690774686621
+spec:
+  type: LoadBalancer
+  selector:
+    app: poc-arc
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
